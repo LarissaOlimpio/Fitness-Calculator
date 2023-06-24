@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TextField } from "../TextField";
 import { useApi } from "../../useApi";
 import { Button } from "../Button";
 import styles from "./DailyCaloryForm.module.css";
+import axios from "axios";
 
 export default function DailyCaloryForm() {
   const [age, setAge] = useState("");
@@ -10,12 +11,39 @@ export default function DailyCaloryForm() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [activityLevel, setAcitivityLevel] = useState("");
-
-  const { recommendedDailyCalories, clearDatas } = useApi();
+  const { clearDatas,token } = useApi();
+  const [dataUser, setDatauser] = useState([])
+  
+ const getDatasUser = async(age, gender, height, weight, activityLevel)  => 
+ {
+   await axios
+      .get("https://fitness-calculator.p.rapidapi.com/dailycalorie", {
+        params: {
+          age: age,
+          gender: gender,
+          height: height,
+          weight: weight,
+          activitylevel: activityLevel,
+        },
+        headers: {
+          "X-RapidAPI-Key": token,
+          "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
+        },
+      })
+      .then(response => {
+        const data = response.data
+        setDatauser(data)
+      })
+      .catch(error => console.log(error))
+    
+ }
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    recommendedDailyCalories(age, gender, height, weight, activityLevel);
+    getDatasUser(age, gender, height, weight, activityLevel)
+   console.log(dataUser.data)
+
+   
   };
 
   const handleLogout = () => {
@@ -28,7 +56,6 @@ export default function DailyCaloryForm() {
         htmlfor="inputAge"
         id="inputAge"
         type="Number"
-        //onKeypress = "return /\d/.teste(event.key)"
         onBlur={(event) => setAge(event.target.value)}
       >
         Idade:
@@ -89,6 +116,8 @@ export default function DailyCaloryForm() {
       <div onClick={handleLogout}>
         <Button type="button">Logout</Button>
       </div>
+    
+      
     </form>
   );
 }
