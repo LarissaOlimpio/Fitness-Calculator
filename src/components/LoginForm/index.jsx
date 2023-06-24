@@ -18,6 +18,7 @@ const LoginForm = () => {
  const handleSubmit = (event) => {
   event.preventDefault()
   console.log(apiKey)
+  
   authenticated(apiKey)
 
  }

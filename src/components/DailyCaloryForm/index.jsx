@@ -49,6 +49,7 @@ export default function DailyCaloryForm() {
   const handleLogout = () => {
     clearDatas();
     location.reload();
+
   };
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -59,6 +60,7 @@ export default function DailyCaloryForm() {
         onBlur={(event) => setAge(event.target.value)}
       >
         Idade:
+        
       </TextField>
 
       <TextField
