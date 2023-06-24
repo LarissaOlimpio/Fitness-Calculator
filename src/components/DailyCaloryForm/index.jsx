@@ -11,12 +11,11 @@ export default function DailyCaloryForm() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [activityLevel, setAcitivityLevel] = useState("");
-  const { clearDatas,token } = useApi();
-  const [dataUser, setDatauser] = useState([])
-  
- const getDatasUser = async(age, gender, height, weight, activityLevel)  => 
- {
-   await axios
+  const { clearDatas, token } = useApi();
+  const [dataUser, setDatauser] = useState();
+
+  const getDatasUser = async (age, gender, height, weight, activityLevel) => {
+    await axios
       .get("https://fitness-calculator.p.rapidapi.com/dailycalorie", {
         params: {
           age: age,
@@ -30,26 +29,21 @@ export default function DailyCaloryForm() {
           "X-RapidAPI-Host": "fitness-calculator.p.rapidapi.com",
         },
       })
-      .then(response => {
-        const data = response.data
-        setDatauser(data)
+      .then((response) => {
+        const data = response.data;
+        setDatauser(data);
       })
-      .catch(error => console.log(error))
-    
- }
+      .catch((error) => console.log(error));
+  };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    getDatasUser(age, gender, height, weight, activityLevel)
-   console.log(dataUser.data)
-
-   
+    await getDatasUser(age, gender, height, weight, activityLevel);
   };
 
   const handleLogout = () => {
     clearDatas();
     location.reload();
-
   };
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
@@ -60,7 +54,6 @@ export default function DailyCaloryForm() {
         onBlur={(event) => setAge(event.target.value)}
       >
         Idade:
-        
       </TextField>
 
       <TextField
@@ -113,13 +106,31 @@ export default function DailyCaloryForm() {
         </option>
       </select>
 
-      <Button type="submit">Enviar</Button>
-
-      <div onClick={handleLogout}>
-        <Button type="button">Logout</Button>
+      <div className={styles.divButtons}>
+        <Button type="submit">Enviar</Button>
+        <div onClick={handleLogout}>
+          <Button type="button">Logout</Button>
+        </div>
       </div>
-    
-      
+
+      {dataUser ? (
+        <div className={styles.divResults}>
+          <p>
+            Para manter o peso o ideal é consumir cerca de:
+            {dataUser.data.goals["maintain weight"]} Kcal
+          </p>
+          <p>
+            Para perder peso o ideal é consumir cerca de:{" "}
+            {dataUser.data.goals["Weight loss"].calory} Kcal
+          </p>
+          <p>
+            Para ganhar peso o ideal é consumir cerca de:{" "}
+            {dataUser.data.goals["Weight gain"].calory} Kcal
+          </p>
+        </div>
+      ) : (
+        ""
+      )}
     </form>
   );
 }
