@@ -26,7 +26,7 @@ const LoginForm = () => {
         <TextField
           htmlFor="inputApiKey"
           id="inputApiKey"
-          type="text"
+          type="password"
           onBlur={handleBlur}
         >
           Digite Sua Chave Api:

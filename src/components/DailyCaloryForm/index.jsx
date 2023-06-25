@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TextField } from "../TextField";
 import { useApi } from "../../useApi";
 import { Button } from "../Button";
@@ -11,10 +11,11 @@ export default function DailyCaloryForm() {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [activityLevel, setAcitivityLevel] = useState("");
-  const { clearDatas, token } = useApi();
-  const [dataUser, setDatauser] = useState();
-
-  const getDatasUser = async (age, gender, height, weight, activityLevel) => {
+  const { clearData, token } = useApi();
+  const [dataUser, setDataUser] = useState();
+ 
+ 
+  const getDataUser = async (age, gender, height, weight, activityLevel) => {
     await axios
       .get("https://fitness-calculator.p.rapidapi.com/dailycalorie", {
         params: {
@@ -31,18 +32,18 @@ export default function DailyCaloryForm() {
       })
       .then((response) => {
         const data = response.data;
-        setDatauser(data);
+        setDataUser(data);
       })
       .catch((error) => console.log(error));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await getDatasUser(age, gender, height, weight, activityLevel);
+    await getDataUser(age, gender, height, weight, activityLevel);
   };
 
   const handleLogout = () => {
-    clearDatas();
+    clearData();
     location.reload();
   };
   return (

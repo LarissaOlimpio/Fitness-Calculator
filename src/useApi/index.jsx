@@ -51,7 +51,7 @@ export const ApiProvider = ({ children }) => {
 
     setUserIsAuthenticated(success);
   };
-  const clearDatas = () => {
+  const clearData = () => {
     const cookies = document.cookie.split(";");
 
     cookies.forEach((cookie) => {
@@ -68,7 +68,7 @@ export const ApiProvider = ({ children }) => {
       value={{
         authenticated,
         userIsAuthenticated,
-        clearDatas,
+        clearData,
         token
       }}
     >
